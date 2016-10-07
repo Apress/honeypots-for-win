@@ -1,0 +1,85 @@
+####################################################################
+# Sample Snort Configuration file for Windows Honeypots
+# Snort.conf
+# Revision 1.1
+var HOME_NET 10.4.4.0/24 (put your honeypot’s subnet here)
+var EXTERNAL_NET any
+var RULE_PATH C:\Snort\rules
+var AIM_SERVERS $HOME_NET
+var HTTP_SERVERS $HOME_NET
+var SMTP_SERVERS $HOME_NET
+var TELNET_SERVERS $HOME_NET
+var SQL_SERVERS $HOME_NET
+var DNS_SERVERS $HOME_NET
+var HTTP_PORTS 80 443 8080
+#####################################################################
+# load preprocessors
+preprocessor frag2
+preprocessor stream4: detect_scans
+preprocessor stream4_reassemble
+preprocessor telnet_decode
+preprocessor bo: -nobrute
+preprocessor portscan-ignorehosts: $DNS_SERVERS
+######################################################################
+# Log all traffic-use as a secondary back up for network protocol sniffer
+log ip any any <> any any (msg: "Snort Unmatched"; session: printable;)
+####################################################################
+# Output plugins
+output alert_full: snort_full
+output alert_fast: snort_fast
+output log_tcpdump: snort.log
+####################################################################
+# Include the additional Rule sets you want to enable.
+include C:\Snort\etc\classification.config
+include C:\Snort\etc\reference.config
+include $RULE_PATH\bad-traffic.rules
+include $RULE_PATH\exploit.rules
+include $RULE_PATH\scan.rules
+include $RULE_PATH\ftp.rules
+include $RULE_PATH\telnet.rules
+include $RULE_PATH\rpc.rules
+include $RULE_PATH\dos.rules
+include $RULE_PATH\ddos.rules
+include $RULE_PATH\dns.rules
+include $RULE_PATH\tftp.rules
+include $RULE_PATH\web-iis.rules
+include $RULE_PATH\web-frontpage.rules
+include $RULE_PATH\web-attacks.rules
+include $RULE_PATH\web-misc.rules
+include $RULE_PATH\web-client.rules
+include $RULE_PATH\sql.rules
+include $RULE_PATH\icmp.rules
+include $RULE_PATH\netbios.rules
+include $RULE_PATH\attack-responses.rules
+include $RULE_PATH\snmp.rules
+include $RULE_PATH\smtp.rules
+include $RULE_PATH\imap.rules
+include $RULE_PATH\pop3.rules
+# include $RULE_PATH\virus.rules
+# include $RULE_PATH\oracle.rules
+# include $RULE_PATH\mysql.rules
+# include $RULE_PATH\nntp.rules
+# include $RULE_PATH\backdoor.rules
+# include $RULE_PATH\shellcode.rules
+# include $RULE_PATH\policy.rules
+# include $RULE_PATH\porn.rules
+# include $RULE_PATH\info.rules
+# include $RULE_PATH\icmp-info.rules
+# include $RULE_PATH\chat.rules
+# include $RULE_PATH\multimedia.rules
+# include $RULE_PATH\p2p.rules
+#####################################################################
+# end of Snort.conf sample configuration
+#####################################################################
+
+
+Here’s an example of a Snort batch file:
+@@echo off
+rem Snort.bat-batch file to execute Snort.exe and its normal command-line parameters
+cls
+C:
+cd\snort\bin
+c:\snort\bin\snort.exe –c C:\Snort\etc\snort.conf –l C:\Snort\log
+rem ***end of Snort.bat***
+
+
